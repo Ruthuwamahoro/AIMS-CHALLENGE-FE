@@ -10,7 +10,6 @@ const initialState: AuthState = {
   error: null
 };
 
-// Define action types
 type AuthAction = 
   | { type: 'LOGIN_SUCCESS'; payload: User }
   | { type: 'REGISTER_SUCCESS'; payload: User }
@@ -19,7 +18,6 @@ type AuthAction =
   | { type: 'LOGOUT' }
   | { type: 'CLEAR_ERRORS' };
 
-// Create reducer function
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case 'USER_LOADED':
@@ -129,9 +127,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     } catch (err: unknown) {
       const error = err as Error
       console.error("Registration error in context:", error);
-      
-      // Handle the structured error from registerService
-      const errorMessage = error.message || 'Registration failed';
+            const errorMessage = error.message || 'Registration failed';
       dispatch({ type: 'AUTH_ERROR', payload: errorMessage });
       showToast(errorMessage, 'error');
       return false;

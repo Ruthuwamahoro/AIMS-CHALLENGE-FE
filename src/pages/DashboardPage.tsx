@@ -2,10 +2,11 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import AdminDashboard from '../components/dashboard/AdminDashboard';
+import UserDashboard from '../components/dashboard/UserDashboard';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 
-const AdminPage: React.FC = () => {
+const DashboardPage: React.FC = () => {
   const { authState } = useAuth();
   
   if (authState.loading) {
@@ -16,16 +17,11 @@ const AdminPage: React.FC = () => {
     return <Navigate to="/login" />;
   }
   
-  // Redirect non-admin users to the dashboard
-  if (authState.user?.role !== 'admin') {
-    return <Navigate to="/dashboard" />;
-  }
-  
   return (
     <DashboardLayout>
-      <AdminDashboard />
+      {authState.user?.role === 'admin' ? <AdminDashboard /> : <UserDashboard />}
     </DashboardLayout>
   );
 };
 
-export default AdminPage
+export default DashboardPage;
