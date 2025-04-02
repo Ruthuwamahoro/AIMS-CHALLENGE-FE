@@ -110,8 +110,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const data = await registerService(userData);
       // If your backend returns the user after registration
-      if (data.token) {
-        dispatch({ type: 'REGISTER_SUCCESS', payload: data.user });
+      if (data.success) {
+        dispatch({ type: 'REGISTER_SUCCESS', payload: data.data });
         showToast('Registration successful', 'success');
         return true;
       } else {

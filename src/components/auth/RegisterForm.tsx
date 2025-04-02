@@ -23,7 +23,6 @@ const RegisterForm: React.FC = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    // Clear error when typing
     if (errors[e.target.name]) {
       setErrors({
         ...errors,
@@ -34,34 +33,27 @@ const RegisterForm: React.FC = () => {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    
-    // Username validation
-    if (!formData.username) {
+        if (!formData.username) {
       newErrors.username = 'Username is required';
     } else if (!/^[a-zA-Z0-9]{8}$/.test(formData.username)) {
       newErrors.username = 'Username must be exactly 8 alphanumeric characters';
     }
-    
-    // Email validation
-    if (!formData.email) {
+        if (!formData.email) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
     
-    // Password validation
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(formData.password)) {
       newErrors.password = 'Password must be at least 8 characters, include uppercase, lowercase, number, and special character';
     }
     
-    // Gender validation
     if (!formData.gender) {
       newErrors.gender = 'Gender is required';
     }
     
-    // Telephone validation
     if (!formData.telephone) {
       newErrors.telephone = 'Telephone is required';
     }

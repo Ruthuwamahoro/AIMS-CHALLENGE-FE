@@ -1,10 +1,10 @@
 export interface User {
-  // id: string;
+  id?: string;
   fullName?: string;
   username?: string;
   email: string;
   gender?: string;
-  password: string;
+  password?: string;
   telephone?: string;
   role?: "admin" | "user";
 }

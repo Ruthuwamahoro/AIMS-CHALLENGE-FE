@@ -19,15 +19,12 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requireAdmin = f
   }
 
   if (!authState.isAuthenticated) {
-    // Redirect to login page, but save the location they were trying to access
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Check if admin is required but user is not admin
   if (requireAdmin && authState.user?.role !== 'admin') {
     return <Navigate to="/dashboard" replace />;
   }
 
-  // If user is authenticated and has the right permissions, render the outlet
   return <Outlet />;
 };

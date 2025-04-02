@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { User } from '../types/auth';
+import { FaSpinner, FaUser, FaEnvelope, FaPhone, FaLock } from 'react-icons/fa';
+import showToast from '../components/ui/showToast';
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -13,94 +15,194 @@ const RegisterPage: React.FC = () => {
     password: '',
     confirmPassword: ''
   });
-  const { register, authState: { error } } = useAuth();
+  
+  const [formErrors, setFormErrors] = useState({
+    fullName: '',
+    username: '',
+    email: '',
+    gender: '',
+    telephone: '',
+    password: '',
+    confirmPassword: ''
+  });
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { register } = useAuth();
   const navigate = useNavigate();
 
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { ...formErrors };
+
+    if (formData.fullName.trim().length < 3) {
+      newErrors.fullName = 'Full name must be at least 3 characters';
+      valid = false;
+    }
+
+    if (formData.username.trim().length < 3) {
+      newErrors.username = 'Username must be at least 3 characters';
+      valid = false;
+    }
+
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      newErrors.email = 'Invalid email address';
+      valid = false;
+    }
+
+    if (!formData.gender) {
+      newErrors.gender = 'Please select a gender';
+      valid = false;
+    }
+
+    if (!formData.telephone.trim()) {
+      newErrors.telephone = 'Phone number is required';
+      valid = false;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      newErrors.password = 'Password does not meet requirements';
+      valid = false;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+      valid = false;
+    }
+    
+    setFormErrors(newErrors);
+    return valid;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    if (formErrors[name as keyof typeof formErrors]) {
+      setFormErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      // Handle password mismatch
+    
+    if (!validateForm()) {
+      showToast('Please correct all errors before submitting', 'error');
       return;
     }
 
-    const userData: User = {
-      fullName: formData.fullName,
-      username: formData.username,
-      email: formData.email,
-      gender: formData.gender,
-      telephone: formData.telephone,
-      password: formData.password
-    };
+    setIsSubmitting(true);
+    
+    try {
+      const userData: User = {
+        fullName: formData.fullName,
+        username: formData.username,
+        email: formData.email,
+        gender: formData.gender,
+        telephone: formData.telephone,
+        password: formData.password
+      };
 
-    const success = await register(userData);
-    if (success) {
-      navigate('/dashboard');
+      const response = await register(userData);
+      
+      if (response) {
+        showToast('Account created successfully!', 'success');
+        setTimeout(() => navigate('/login'), 1500);
+      }
+    } catch (error: unknown) {
+      const err = error as Error
+      showToast(err.message || 'Registration failed', 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Create Account</h2>
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-blue-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-xl p-8 space-y-6">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-indigo-700">Create Account</h2>
+          <p className="mt-2 text-sm text-gray-600">Join our community today</p>
+        </div>
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
               Full Name
             </label>
-            <input
-              id="fullName"
-              name="fullName"
-              type="text"
-              required
-              value={formData.fullName}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                <FaUser />
+              </div>
+              <input
+                id="fullName"
+                name="fullName"
+                type="text"
+                required
+                value={formData.fullName}
+                onChange={handleChange}
+                className={`pl-10 block w-full px-3 py-2.5 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  formErrors.fullName ? 'border-red-300' : 'border-gray-300'
+                }`}
+              />
+            </div>
+            {formErrors.fullName && (
+              <p className="mt-1 text-sm text-red-600">{formErrors.fullName}</p>
+            )}
           </div>
 
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
               Username
             </label>
-            <input
-              id="username"
-              name="username"
-              type="text"
-              required
-              value={formData.username}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                <FaUser />
+              </div>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                required
+                value={formData.username}
+                onChange={handleChange}
+                className={`pl-10 block w-full px-3 py-2.5 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  formErrors.username ? 'border-red-300' : 'border-gray-300'
+                }`}
+              />
+            </div>
+            {formErrors.username && (
+              <p className="mt-1 text-sm text-red-600">{formErrors.username}</p>
+            )}
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Email
             </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                <FaEnvelope />
+              </div>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                className={`pl-10 block w-full px-3 py-2.5 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  formErrors.email ? 'border-red-300' : 'border-gray-300'
+                }`}
+              />
+            </div>
+            {formErrors.email && (
+              <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>
+            )}
           </div>
 
           <div>
-            <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">
               Gender
             </label>
             <select
@@ -109,74 +211,124 @@ const RegisterPage: React.FC = () => {
               required
               value={formData.gender}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className={`block w-full px-3 py-2.5 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                formErrors.gender ? 'border-red-300' : 'border-gray-300'
+              }`}
             >
               <option value="">Select Gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="other">Other</option>
             </select>
+            {formErrors.gender && (
+              <p className="mt-1 text-sm text-red-600">{formErrors.gender}</p>
+            )}
           </div>
 
           <div>
-            <label htmlFor="telephone" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="telephone" className="block text-sm font-medium text-gray-700 mb-1">
               Telephone
             </label>
-            <input
-              id="telephone"
-              name="telephone"
-              type="tel"
-              required
-              value={formData.telephone}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                <FaPhone />
+              </div>
+              <input
+                id="telephone"
+                name="telephone"
+                type="tel"
+                required
+                value={formData.telephone}
+                onChange={handleChange}
+                className={`pl-10 block w-full px-3 py-2.5 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  formErrors.telephone ? 'border-red-300' : 'border-gray-300'
+                }`}
+              />
+            </div>
+            {formErrors.telephone && (
+              <p className="mt-1 text-sm text-red-600">{formErrors.telephone}</p>
+            )}
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                <FaLock />
+              </div>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                value={formData.password}
+                onChange={handleChange}
+                className={`pl-10 block w-full px-3 py-2.5 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  formErrors.password ? 'border-red-300' : 'border-gray-300'
+                }`}
+              />
+            </div>
+            {formErrors.password && (
+              <p className="mt-1 text-sm text-red-600">{formErrors.password}</p>
+            )}
+            <p className="mt-1 text-xs text-gray-500">
+              Must have uppercase, lowercase, number and special character (@$!%*?&)
+            </p>
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
               Confirm Password
             </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              required
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                <FaLock />
+              </div>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                required
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className={`pl-10 block w-full px-3 py-2.5 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                  formErrors.confirmPassword ? 'border-red-300' : 'border-gray-300'
+                }`}
+              />
+            </div>
+            {formErrors.confirmPassword && (
+              <p className="mt-1 text-sm text-red-600">{formErrors.confirmPassword}</p>
+            )}
           </div>
 
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            disabled={isSubmitting}
+            className={`w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors ${
+              isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
+            }`}
           >
-            Create Account
+            {isSubmitting ? (
+              <>
+                <FaSpinner className="animate-spin mr-2" />
+                Creating Account...
+              </>
+            ) : (
+              'Create Account'
+            )}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <Link to="/login" className="text-indigo-600 hover:text-indigo-500">
-            Sign in
-          </Link>
-        </p>
+        <div className="text-center pt-2">
+          <p className="text-sm text-gray-600">
+            Already have an account?{' '}
+            <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+              Sign in
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
