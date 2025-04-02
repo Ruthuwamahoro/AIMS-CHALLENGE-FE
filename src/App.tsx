@@ -2,9 +2,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useAuth } from "./context/AuthContext";
 import LoadingSpinner from "./components/ui/LoadingSpinner";
 import { Toaster } from 'react-hot-toast';
-import Dashboard from "./pages/Dashboard";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import Dashboard from "./pages/Dashboard";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

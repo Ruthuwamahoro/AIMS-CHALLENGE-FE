@@ -1,10 +1,12 @@
 import axios from "axios";
 import { User } from "../types/auth";
 
-// Use environment variable or default to localhost
-const API_URL = process.env.API_URL as string;
+const API_URL = import.meta.env.VITE_API_URL;
 
-// Create axios instance with authorization header
+if (!API_URL) {
+  throw new Error('VITE_API_URL environment variable is not defined');
+}
+
 export const authApi = axios.create({
   baseURL: API_URL,
 });
