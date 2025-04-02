@@ -9,7 +9,6 @@ export const validateRegistrationForm = (
 ): ValidationErrors => {
   const errors: ValidationErrors = {};
 
-  // Updated username validation to be more flexible
   if (!formData.username) {
     errors.username = "Username is required";
   } else if (formData.username.length < 3) {

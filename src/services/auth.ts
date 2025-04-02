@@ -2,7 +2,7 @@ import axios from "axios";
 import { User } from "../types/auth";
 
 // Use environment variable or default to localhost
-const API_URL = "http://localhost:8000/api";
+const API_URL = process.env.API_URL as string;
 
 // Create axios instance with authorization header
 export const authApi = axios.create({
