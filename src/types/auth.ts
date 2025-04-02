@@ -39,7 +39,7 @@ export interface AuthResponse {
 }
 
 export interface LoginCredentials {
-  identifier: string; // Can be email or username
+  identifier: string;
   password: string;
 }
 

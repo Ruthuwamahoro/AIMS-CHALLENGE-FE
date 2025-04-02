@@ -8,7 +8,6 @@ import DashboardPage from "./pages/DashboardPage";
 import AdminPage from "./pages/AdminPage";
 import ProfilePage from "./pages/ProfilePage";
 
-// Protected route component to check authentication
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requireAdmin?: boolean;
@@ -25,7 +24,6 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
     return <Navigate to="/login" />;
   }
 
-  // If route requires admin privilege and user is not admin
   if (requireAdmin && authState.user?.role !== 'admin') {
     return <Navigate to="/dashboard" />;
   }
@@ -45,7 +43,6 @@ function App() {
       <Toaster position="top-right" />
       <Router>
         <Routes>
-          {/* Public routes */}
           <Route path="/login" element={
             authState.isAuthenticated ? <Navigate to="/dashboard" /> : <LoginPage />
           } />
@@ -53,7 +50,6 @@ function App() {
             authState.isAuthenticated ? <Navigate to="/dashboard" /> : <RegisterPage />
           } />
           
-          {/* Protected routes */}
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <DashboardPage />
@@ -70,12 +66,10 @@ function App() {
             </ProtectedRoute>
           } />
           
-          {/* Redirect root to dashboard if authenticated, otherwise to login */}
           <Route path="/" element={
             authState.isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
           } />
           
-          {/* Catch all route - redirect to dashboard or login */}
           <Route path="*" element={
             authState.isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
           } />

@@ -9,12 +9,10 @@ const Sidebar: React.FC = () => {
   return (
     <aside className="w-64 h-full bg-white shadow-md">
       <div className="bg-gray-900 text-white min-h-screen flex flex-col w-64 shadow-xl">
-        {/* Logo Area */}
         <div className="p-5 border-b border-gray-700">
           <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Dashboard</h2>
         </div>
         
-        {/* User Info */}
         <div className="p-5 border-b border-gray-700">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 flex items-center justify-center text-xl font-bold">
@@ -27,7 +25,6 @@ const Sidebar: React.FC = () => {
           </div>
         </div>
         
-        {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           <p className="text-xs text-gray-500 uppercase font-semibold tracking-wider pl-3 mb-2">Main</p>
           
@@ -151,7 +148,6 @@ const Sidebar: React.FC = () => {
           </NavLink>
         </nav>
         
-        {/* Logout Button */}
         <div className="p-4 border-t border-gray-700">
           <button
             onClick={logout}

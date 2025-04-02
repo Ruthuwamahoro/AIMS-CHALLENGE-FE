@@ -11,7 +11,6 @@ export const authApi = axios.create({
   baseURL: API_URL,
 });
 
-// Add authorization header to requests if token exists
 authApi.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -35,7 +34,6 @@ export const login = async (identifier: string, password: string) => {
     }
     return null;
   } catch (error) {
-    // Pass through the server error message
     if (axios.isAxiosError(error) && error.response?.data?.message) {
       throw new Error(error.response.data.message);
     }
@@ -45,11 +43,8 @@ export const login = async (identifier: string, password: string) => {
 
 export const registerService = async (userData: User) => {
   try {
-    console.log("Starting registration process");
     const res = await authApi.post(`/auth/signup`, userData);
-    console.log("Registration response:", res.data);
     
-    // Return the response in a consistent format
     return {
       success: res.status === 201,
       data: res.data.data,
@@ -57,12 +52,9 @@ export const registerService = async (userData: User) => {
       status: res.status
     };
   } catch (error: unknown) {
-    console.error("Registration error:", error);
     
-    // Handle Axios errors with response data
     if (axios.isAxiosError(error) && error.response) {
       const errorMessage = error.response.data.message || "Registration failed";
-      // Throw a structured error object
       throw {
         success: false,
         message: errorMessage,
@@ -70,7 +62,6 @@ export const registerService = async (userData: User) => {
       };
     }
     
-    // Generic error handling
     const err = error as Error;
     throw {
       success: false,

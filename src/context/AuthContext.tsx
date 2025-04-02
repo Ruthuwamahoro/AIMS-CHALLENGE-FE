@@ -63,10 +63,8 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   }
 };
 
-// Create the context with initial undefined value
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Separate Provider component
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
@@ -111,7 +109,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       console.log("Registration result:", result);
       
       if (result.success) {
-        // If there's user data returned (though your backend returns null in data)
         if (result.data) {
           dispatch({ type: 'REGISTER_SUCCESS', payload: result.data });
         }
@@ -119,15 +116,13 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         showToast(result.message || 'Registration successful', 'success');
         return true;
       } else {
-        // This shouldn't happen with the current implementation but adding as safeguard
         dispatch({ type: 'AUTH_ERROR', payload: result.message || 'Registration failed' });
         showToast(result.message || 'Registration failed', 'error');
         return false;
       }
     } catch (err: unknown) {
       const error = err as Error
-      console.error("Registration error in context:", error);
-            const errorMessage = error.message || 'Registration failed';
+       const errorMessage = error.message || 'Registration failed';
       dispatch({ type: 'AUTH_ERROR', payload: errorMessage });
       showToast(errorMessage, 'error');
       return false;
@@ -136,7 +131,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   const logout = () => {
     dispatch({ type: 'LOGOUT' });
-    showToast('Logged out successfully', 'success');
   };
 
   const clearErrors = () => {
@@ -158,7 +152,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   );
 };
 
-// Custom hook
 const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
@@ -167,5 +160,4 @@ const useAuth = (): AuthContextType => {
   return context;
 };
 
-// Named exports
 export { AuthProvider, useAuth, AuthContext };

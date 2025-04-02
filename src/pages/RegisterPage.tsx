@@ -20,7 +20,6 @@ const RegisterPage: React.FC = () => {
       }
     } catch (error) {
       console.error("Form submission error:", error);
-      // No need to throw here as the error is already handled in the register function
     } finally {
       setIsSubmitting(false);
     }

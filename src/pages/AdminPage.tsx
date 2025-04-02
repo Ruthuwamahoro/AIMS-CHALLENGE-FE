@@ -16,7 +16,6 @@ const AdminPage: React.FC = () => {
     return <Navigate to="/login" />;
   }
   
-  // Redirect non-admin users to the dashboard
   if (authState.user?.role !== 'admin') {
     return <Navigate to="/dashboard" />;
   }

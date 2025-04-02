@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { getAllUsers } from '../../services/user';
 import showToast from '../ui/showToast';
 import { userData } from '../../types/auth';
-import UserTable from './userTable';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import UserTable from './userTable';
 
 const AdminDashboard: React.FC = () => {
   const [users, setUsers] = useState<userData[]>([]);
@@ -15,9 +15,9 @@ const AdminDashboard: React.FC = () => {
         const userData = await getAllUsers();
         setUsers(userData);
         setLoading(false);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-        showToast('Failed to load users', 'error');
+      } catch (error: unknown) {
+        const err = error as Error;
+        showToast(err.message, 'error');
         setLoading(false);
       }
     };
