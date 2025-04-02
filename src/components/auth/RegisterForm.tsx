@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { FaUser, FaEnvelope, FaPhone, FaLock, FaSpinner } from 'react-icons/fa';
 import { User } from '../../types/auth';
-import showToast from '../ui/showToast';
-
+import { validateRegisterForm } from '../../utils/validation';
 
 interface RegisterFormProps {
   onSubmit: (userData: User) => Promise<void>;
@@ -32,46 +31,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isSubmitting, set
   });
 
   const validateForm = () => {
-    let valid = true;
-    const newErrors = { ...formErrors };
-
-    if (formData.fullName.trim().length < 3) {
-      newErrors.fullName = 'Full name must be at least 3 characters';
-      valid = false;
-    }
-
-    if (formData.username.trim().length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
-      valid = false;
-    }
-
-    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      newErrors.email = 'Invalid email address';
-      valid = false;
-    }
-
-    if (!formData.gender) {
-      newErrors.gender = 'Please select a gender';
-      valid = false;
-    }
-
-    if (!formData.telephone.trim()) {
-      newErrors.telephone = 'Phone number is required';
-      valid = false;
-    }
-
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!passwordRegex.test(formData.password)) {
-      newErrors.password = 'Password does not meet requirements';
-      valid = false;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-      valid = false;
-    }
-    
-    setFormErrors(newErrors);
+    const { valid, errors } = validateRegisterForm(formData);
+    setFormErrors(errors);
     return valid;
   };
 
@@ -88,10 +49,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isSubmitting, set
     e.preventDefault();
     
     if (!validateForm()) {
-      showToast('Please correct all errors before submitting', 'error');
       return;
     }
-
+  
     setIsSubmitting(true);
     
     try {
@@ -103,11 +63,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isSubmitting, set
         telephone: formData.telephone,
         password: formData.password
       };
-
+  
       await onSubmit(userData);
+      
     } catch (error: unknown) {
       const err = error as Error;
-      showToast(err.message || 'Registration failed', 'error');
+      console.log(err);
+    } finally {
       setIsSubmitting(false);
     }
   };

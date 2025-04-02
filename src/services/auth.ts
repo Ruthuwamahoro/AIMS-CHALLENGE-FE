@@ -43,18 +43,40 @@ export const login = async (identifier: string, password: string) => {
   }
 };
 
-export const register = async (userData: User) => {
+export const registerService = async (userData: User) => {
   try {
+    console.log("Starting registration process");
     const res = await authApi.post(`/auth/signup`, userData);
+    console.log("Registration response:", res.data);
+    
+    // Return the response in a consistent format
     return {
-      success: true,
-      data: res.data,
+      success: res.status === 201,
+      data: res.data.data,
       message: res.data.message,
+      status: res.status
     };
   } catch (error: unknown) {
+    console.error("Registration error:", error);
+    
+    // Handle Axios errors with response data
+    if (axios.isAxiosError(error) && error.response) {
+      const errorMessage = error.response.data.message || "Registration failed";
+      // Throw a structured error object
+      throw {
+        success: false,
+        message: errorMessage,
+        status: error.response.status
+      };
+    }
+    
+    // Generic error handling
     const err = error as Error;
-    const message = err.message || err.message || "Registration failed";
-    throw new Error(message);
+    throw {
+      success: false,
+      message: err.message || "Registration failed",
+      status: 500
+    };
   }
 };
 

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { AuthState, AuthContextType, User } from '../types/auth';
-import { login as loginService, register as registerService, getCurrentUser } from '../services/auth';
+import { login as loginService, registerService, getCurrentUser } from '../services/auth';
 import showToast from '../components/ui/showToast';
 
 const initialState: AuthState = {
@@ -65,11 +65,11 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   }
 };
 
-// Create the context
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Create the context with initial undefined value
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Create the provider component
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+// Separate Provider component
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
@@ -108,20 +108,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (userData: User): Promise<boolean> => {
     try {
-      const data = await registerService(userData);
-      // If your backend returns the user after registration
-      if (data.success) {
-        dispatch({ type: 'REGISTER_SUCCESS', payload: data.data });
-        showToast('Registration successful', 'success');
+      const result = await registerService(userData);
+      
+      console.log("Registration result:", result);
+      
+      if (result.success) {
+        // If there's user data returned (though your backend returns null in data)
+        if (result.data) {
+          dispatch({ type: 'REGISTER_SUCCESS', payload: result.data });
+        }
+        
+        showToast(result.message || 'Registration successful', 'success');
         return true;
       } else {
-        // If registration is successful but requires login afterwards
-        showToast('Registration successful. Please login.', 'success');
-        return true;
+        // This shouldn't happen with the current implementation but adding as safeguard
+        dispatch({ type: 'AUTH_ERROR', payload: result.message || 'Registration failed' });
+        showToast(result.message || 'Registration failed', 'error');
+        return false;
       }
-    } catch (error: unknown) {
-      const err = error as Error
-      const errorMessage = err.message || 'Registration failed';
+    } catch (err: unknown) {
+      const error = err as Error
+      console.error("Registration error in context:", error);
+      
+      // Handle the structured error from registerService
+      const errorMessage = error.message || 'Registration failed';
       dispatch({ type: 'AUTH_ERROR', payload: errorMessage });
       showToast(errorMessage, 'error');
       return false;
@@ -152,11 +162,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
-// Custom hook for using the auth context
-export const useAuth = (): AuthContextType => {
+// Custom hook
+const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
+
+// Named exports
+export { AuthProvider, useAuth, AuthContext };

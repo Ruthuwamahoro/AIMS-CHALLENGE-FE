@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { User } from '../types/auth';
-import showToast from '../components/ui/showToast';
 import RegisterForm from '../components/auth/RegisterForm';
 
 const RegisterPage: React.FC = () => {
@@ -13,14 +12,17 @@ const RegisterPage: React.FC = () => {
 
   const handleFormSubmit = async (userData: User) => {
     try {
-      const response = await register(userData);
+      setIsSubmitting(true);
+      const success = await register(userData);
       
-      if (response) {
-        showToast('Account created successfully!', 'success');
+      if (success) {
         setTimeout(() => navigate('/login'), 1500);
       }
     } catch (error) {
-      throw error; 
+      console.error("Form submission error:", error);
+      // No need to throw here as the error is already handled in the register function
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

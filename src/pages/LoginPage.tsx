@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import showToast from '../components/ui/showToast';
 import LoginForm from '../components/auth/LoginForm';
 
 const LoginPage: React.FC = () => {
@@ -15,13 +14,11 @@ const LoginPage: React.FC = () => {
       const success = await login(identifier, password);
       
       if (success) {
-        showToast('Login successful! Redirecting...', 'success');
         setTimeout(() => navigate('/dashboard'), 1000);
       }
       
       return success;
     } catch (error) {
-      // Let the form component handle the error
       throw error;
     }
   };
