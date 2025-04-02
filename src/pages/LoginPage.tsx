@@ -24,10 +24,8 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-blue-100 flex items-center justify-center">
-      <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-xl">
-        <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6">Sign in</h2>
-        
+    <div className="bg-gradient-to-b from-indigo-50 to-blue-100 flex items-center justify-center py-32">
+      <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-xl">        
         <LoginForm 
           onSubmit={handleLogin}
           isSubmitting={isSubmitting}

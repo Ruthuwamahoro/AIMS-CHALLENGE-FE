@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { User } from '../types/auth';
 import RegisterForm from '../components/auth/RegisterForm';
@@ -38,15 +38,6 @@ const RegisterPage: React.FC = () => {
           isSubmitting={isSubmitting}
           setIsSubmitting={setIsSubmitting}
         />
-
-        <div className="text-center pt-2">
-          <p className="text-sm text-gray-600">
-            Already have an account?{' '}
-            <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
-              Sign in
-            </Link>
-          </p>
-        </div>
       </div>
     </div>
   );
