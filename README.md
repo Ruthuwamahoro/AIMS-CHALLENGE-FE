@@ -1,55 +1,167 @@
-# React + TypeScript + Vite
+# User Management Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based user management system with role-based access control, built for AIMS
 
-Currently, two official plugins are available:
+![Dashboard Preview](./preview.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 🔐 User Authentication (Login/Register/Logout)
+- 👥 Role-Based Access Control
+  - Admin: Full user management capabilities
+  - User: Profile view and management
+- 📱 Responsive Design with Tailwind CSS
+- ⚡ Fast development with Vite
+- 🔄 Real-time feedback and error handling
+- 🐳 Containerized with Docker
+- 🔄 Automated CI/CD with GitHub Actions
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Tech Stack
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- React.js with Vite
+- TypeScript
+- Tailwind CSS
+- React Router DOM
+- Axios for API calls
+- Docker
+- GitHub Actions
+- Vercel for deployment
+
+## 🏃‍♂️ Running Locally
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Ruthuwamahoro/AIMS-CHALLENGE-FE.git
+cd AIMS-CHALLENGE-FE
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install dependencies:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm install
 ```
-# AIMS-CHALLENGE-FE
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+## 🐋 Docker Support
+
+Build the image:
+
+```bash
+docker build -t ruth02/aims-challenge .
+```
+
+Run the container:
+
+```bash
+docker run -p 80:80 ruth02/aims-challenge
+```
+
+## 🚀 Deployment
+
+The application is automatically deployed using:
+
+- GitHub Actions for Docker image builds
+- Vercel for web hosting
+
+### Live Demo
+
+- Application: [https://aims-challenge.vercel.app](https://aims-challenge.vercel.app)
+- Docker Image: [https://hub.docker.com/r/ruth02/aims-challenge](https://hub.docker.com/r/ruth02/aims-challenge)
+
+## 📁 Project Structure
+
+```
+Challenge-AIMS/
+├── src/
+│   ├── components/
+│   │   ├── auth/
+│   │   │   ├── LoginForm.tsx
+│   │   │   ├── RegisterForm.tsx
+│   │   │   └── ProtectedRoute.tsx
+│   │   ├── dashboard/
+│   │   │   ├── AdminDashboard.tsx
+│   │   │   ├── UserDashboard.tsx
+│   │   │   └── UserTable.tsx
+│   │   ├── layout/
+│   │   │   ├── DashboardLayout.tsx
+│   │   │   └── Sidebar.tsx
+│   │   └── ui/
+│   │       ├── LoadingSpinner.tsx
+│   │       └── showToast.tsx
+|   |       ├── ErrorMessage.tsx
+│   │       └── Input.tsx
+|   |       ├── Button.tsx
+│   ├── context/
+│   │   └── AuthContext.tsx
+│   ├── pages/
+│   │   ├── LoginPage.tsx
+│   │   ├── RegisterPage.tsx
+│   │   ├── DashboardPage.tsx
+│   │   └── AdminPage.tsx
+|   |   └── ProgilePage.tsx
+│   ├── services/
+│   │   └── user.ts
+│   └── types/
+│       └── auth.ts
+
+|
+├── .github/             # GitHub Actions workflows
+├── package.json         # Project dependencies
+├── tsconfig.json        # TypeScript configuration
+├── vite.config.ts       # Vite configuration
+├── Dockerfile          # Docker build configuration
+└── README.md           # Project documentation
+```
+
+## 📝 Conclusion
+
+This project successfully implements:
+
+### Core Requirements ✅
+
+- Modern React application with Vite and TypeScript
+- Complete authentication system with role-based access
+- Responsive UI with Tailwind CSS
+- Docker containerization
+- CI/CD with GitHub Actions
+
+### Key Achievements 🏆
+
+- Secure role-based authorization
+- Optimized Docker build process
+- Automated deployments
+- Clean, maintainable code structure
+- Type-safe implementation
+
+### Live Deployments 🌐
+
+- Web App: [aims-challenge.vercel.app](https://aims-challenge.vercel.app)
+- Docker Image: [ruth02/aims-challenge](https://hub.docker.com/r/ruth02/aims-challenge)
+
+## 👥 Contributors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/Ruthuwamahoro">
+        <img src="https://github.com/Ruthuwamahoro.png" width="100px;" alt="Ruth Uwamahoro"/>
+        <br />
+        <sub><b>Ruth Uwamahoro</b></sub>
+      </a>
+      <br />
+      <sub>Full Stack Developer</sub>
+    </td>
+  </tr>
+</table>
+
+### Connect with me:
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ruth-uwamahoro)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ruthuwamahoro)
+

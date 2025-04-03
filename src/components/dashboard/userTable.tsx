@@ -6,6 +6,7 @@ interface UserTableProps {
 }
 
 const UserTable: React.FC<UserTableProps> = ({ users }) => {
+  console.log("responsee", users)
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white divide-y divide-gray-200">

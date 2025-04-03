@@ -28,7 +28,7 @@ const AdminDashboard: React.FC = () => {
   if (loading) {
     return <LoadingSpinner />;
   }
-
+  console.log("userssss", users)
   return (
     <div className="space-y-6">
       <div className="bg-white shadow rounded-lg">

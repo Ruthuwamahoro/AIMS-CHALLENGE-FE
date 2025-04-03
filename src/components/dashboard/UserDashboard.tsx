@@ -4,13 +4,13 @@ import { useAuth } from '../../context/AuthContext';
 const UserDashboard: React.FC = () => {
   const { authState } = useAuth();
   const user = authState.user;
-
+  console.log("userdddd", user)
   return (
     <div className="bg-white shadow rounded-lg p-6">
       <div className="border-b border-gray-200 pb-5 mb-5">
         <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
         <p className="mt-2 text-sm text-gray-500">
-          Welcome back, {user?.fullName || user?.username || 'User'}
+          Welcome back, {user?.identifier  || 'User'}
         </p>
       </div>
 
@@ -23,7 +23,7 @@ const UserDashboard: React.FC = () => {
         </div>
         <div className="bg-blue-50 rounded-lg p-6 shadow-sm">
           <h3 className="text-lg font-medium text-blue-800">Email</h3>
-          <p className="text-xl font-semibold text-blue-600">{user?.email}</p>
+          <p className="text-xl font-semibold text-blue-600">{user?.identifier}</p>
         </div>
       </div>
 

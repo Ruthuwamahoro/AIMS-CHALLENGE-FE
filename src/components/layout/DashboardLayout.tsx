@@ -8,7 +8,7 @@ interface DashboardLayoutProps {
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="flex h-[calc(100vh-64px)]"> {/* Adjust 64px based on your TopNav height */}
+      <div className="flex h-[calc(100vh-64px)]"> 
         <Sidebar />
         <main className="flex-1 overflow-y-auto p-8">
           {children}
