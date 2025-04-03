@@ -3,7 +3,7 @@ import { getAllUsers } from '../../services/user';
 import showToast from '../ui/showToast';
 import { userData } from '../../types/auth';
 import LoadingSpinner from '../ui/LoadingSpinner';
-import UserTable from './UserTable';
+import UserTable from './userTable';
 
 const AdminDashboard: React.FC = () => {
   const [users, setUsers] = useState<userData[]>([]);
