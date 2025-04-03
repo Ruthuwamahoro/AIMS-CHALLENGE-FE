@@ -119,6 +119,22 @@ Challenge-AIMS/
 └── README.md           # Project documentation
 ```
 
+## 🔧 Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# Backend API URL
+VITE_API_URL=https://aims-challenge-be.onrender.com 
+
+# For local development
+VITE_API_URL=http://localhost:8000/api 
+```
+
+Make sure to add the appropriate API URL before running the application.
+
+> Note: When deploying to Vercel, add the `VITE_API_URL` environment variable in Vercel project settings.
+
 ## 📝 Conclusion
 
 This project successfully implements:
@@ -164,4 +180,3 @@ This project successfully implements:
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ruth-uwamahoro)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ruthuwamahoro)
-
