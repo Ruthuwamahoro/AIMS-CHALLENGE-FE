@@ -1,4 +1,3 @@
-import React from 'react';
 import { toast } from 'react-hot-toast';
 import { HiMiniCheckCircle } from "react-icons/hi2";
 import { GoXCircleFill } from "react-icons/go";
